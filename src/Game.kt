@@ -9,13 +9,14 @@ class Game(private val context: CanvasRenderingContext2D) {
 
     init {
         window.addEventListener("keydown", {onKeyDown(it)})
-        window.addEventListener("keyUp", {onKeyUp(it)})
+        window.addEventListener("keyup", {onKeyUp(it)})
     }
 
     fun start() {
         if (timer == 0) {
             stop()
-            timer = window.setInterval({ loop() }, 50)
+            timer = window.setInterval({ loop() }, 10)
+            //loop()
         }
     }
 
@@ -30,6 +31,8 @@ class Game(private val context: CanvasRenderingContext2D) {
         context.clearRect(0.0, 0.0, GAME_WIDTH, GAME_HEIGHT)
         update()
         draw()
+
+        //window.requestAnimationFrame { run { loop() } }
     }
 
     private fun update() {
@@ -50,8 +53,13 @@ class Game(private val context: CanvasRenderingContext2D) {
 
     private fun onKeyUp(event: Event) {
         val keyboardEvent = event as KeyboardEvent
-        if (keyboardEvent.keyCode == 37 || keyboardEvent.keyCode == 39) {
-            paddle.stop();
+        when (keyboardEvent.keyCode) {
+            37 -> {
+                if (paddle.speed < 0) paddle.stop()
+            }
+            39 -> {
+                if (paddle.speed > 0) paddle.stop()
+            }
         }
     }
 }

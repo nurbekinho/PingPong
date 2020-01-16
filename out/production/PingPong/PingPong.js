@@ -11,7 +11,7 @@ var PingPong = function (_, Kotlin) {
     this.paddle_0 = new Paddle(this.context_0);
     this.timer_0 = 0;
     window.addEventListener('keydown', Game_init$lambda(this));
-    window.addEventListener('keyUp', Game_init$lambda_0(this));
+    window.addEventListener('keyup', Game_init$lambda_0(this));
   }
   function Game$start$lambda(this$Game) {
     return function () {
@@ -22,7 +22,7 @@ var PingPong = function (_, Kotlin) {
   Game.prototype.start = function () {
     if (this.timer_0 === 0) {
       this.stop_0();
-      this.timer_0 = window.setInterval(Game$start$lambda(this), 50);
+      this.timer_0 = window.setInterval(Game$start$lambda(this), 10);
     }
   };
   Game.prototype.stop_0 = function () {
@@ -57,8 +57,15 @@ var PingPong = function (_, Kotlin) {
   Game.prototype.onKeyUp_0 = function (event) {
     var tmp$;
     var keyboardEvent = Kotlin.isType(tmp$ = event, KeyboardEvent) ? tmp$ : throwCCE();
-    if (keyboardEvent.keyCode === 37 || keyboardEvent.keyCode === 39) {
-      this.paddle_0.stop();
+    switch (keyboardEvent.keyCode) {
+      case 37:
+        if (this.paddle_0.speed < 0)
+          this.paddle_0.stop();
+        break;
+      case 39:
+        if (this.paddle_0.speed > 0)
+          this.paddle_0.stop();
+        break;
     }
   };
   function Game_init$lambda(this$Game) {
@@ -84,9 +91,11 @@ var PingPong = function (_, Kotlin) {
     this.height_0 = 20.0;
     this.x_0 = (GAME_WIDTH - this.width_0) / 2;
     this.y_0 = GAME_HEIGHT - this.height_0 - 10;
-    this.speed_0 = 10;
+    this.maxSpeed_0 = 10.0;
+    this.speed = 0.0;
   }
   Paddle.prototype.update = function () {
+    this.x_0 += this.speed;
     if (this.x_0 < 0)
       this.x_0 = 0.0;
     else if (this.x_0 + this.width_0 > GAME_WIDTH)
@@ -96,12 +105,13 @@ var PingPong = function (_, Kotlin) {
     this.context_0.fillRect(this.x_0, this.y_0, this.width_0, this.height_0);
   };
   Paddle.prototype.moveLeft = function () {
-    this.x_0 -= this.speed_0;
+    this.speed = -this.maxSpeed_0;
   };
   Paddle.prototype.moveRight = function () {
-    this.x_0 += this.speed_0;
+    this.speed = this.maxSpeed_0;
   };
   Paddle.prototype.stop = function () {
+    this.speed = 0.0;
   };
   Paddle.$metadata$ = {
     kind: Kind_CLASS,
