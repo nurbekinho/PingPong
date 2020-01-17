@@ -5,6 +5,7 @@ import kotlin.browser.window
 
 class Game(private val context: CanvasRenderingContext2D) {
     private val paddle: Paddle = Paddle(context)
+    private val ball: Ball = Ball(context)
     private var timer: Int = 0
 
     init {
@@ -15,7 +16,7 @@ class Game(private val context: CanvasRenderingContext2D) {
     fun start() {
         if (timer == 0) {
             stop()
-            timer = window.setInterval({ loop() }, 10)
+            timer = window.setInterval({ loop() }, 5)
             //loop()
         }
     }
@@ -36,11 +37,13 @@ class Game(private val context: CanvasRenderingContext2D) {
     }
 
     private fun update() {
+        ball.update()
         paddle.update()
     }
 
     private fun draw() {
         paddle.draw()
+        ball.draw()
     }
 
     private fun onKeyDown(event: Event) {

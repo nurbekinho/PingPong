@@ -3,12 +3,42 @@ if (typeof kotlin === 'undefined') {
 }
 var PingPong = function (_, Kotlin) {
   'use strict';
+  var math = Kotlin.kotlin.math;
+  var Kind_CLASS = Kotlin.Kind.CLASS;
   var Unit = Kotlin.kotlin.Unit;
   var throwCCE = Kotlin.throwCCE;
-  var Kind_CLASS = Kotlin.Kind.CLASS;
+  function Ball(context) {
+    this.context_0 = context;
+    this.radius_0 = 10.0;
+    this.x_0 = (GAME_WIDTH - this.radius_0) / 2;
+    this.y_0 = (GAME_HEIGHT - this.radius_0) / 2;
+    this.xSpeed_0 = 4;
+    this.ySpeed_0 = 2;
+  }
+  Ball.prototype.update = function () {
+    this.x_0 += this.xSpeed_0;
+    this.y_0 += this.ySpeed_0;
+    if (this.x_0 + this.radius_0 > GAME_WIDTH || this.x_0 - this.radius_0 < 0) {
+      this.xSpeed_0 = this.xSpeed_0 * -1 | 0;
+    }
+    if (this.y_0 + this.radius_0 > GAME_HEIGHT || this.y_0 - this.radius_0 < 0) {
+      this.ySpeed_0 = this.ySpeed_0 * -1 | 0;
+    }
+  };
+  Ball.prototype.draw = function () {
+    this.context_0.beginPath();
+    this.context_0.arc(this.x_0, this.y_0, this.radius_0, 0.0, 2 * math.PI);
+    this.context_0.stroke();
+  };
+  Ball.$metadata$ = {
+    kind: Kind_CLASS,
+    simpleName: 'Ball',
+    interfaces: []
+  };
   function Game(context) {
     this.context_0 = context;
     this.paddle_0 = new Paddle(this.context_0);
+    this.ball_0 = new Ball(this.context_0);
     this.timer_0 = 0;
     window.addEventListener('keydown', Game_init$lambda(this));
     window.addEventListener('keyup', Game_init$lambda_0(this));
@@ -22,7 +52,7 @@ var PingPong = function (_, Kotlin) {
   Game.prototype.start = function () {
     if (this.timer_0 === 0) {
       this.stop_0();
-      this.timer_0 = window.setInterval(Game$start$lambda(this), 10);
+      this.timer_0 = window.setInterval(Game$start$lambda(this), 5);
     }
   };
   Game.prototype.stop_0 = function () {
@@ -37,10 +67,12 @@ var PingPong = function (_, Kotlin) {
     this.draw_0();
   };
   Game.prototype.update_0 = function () {
+    this.ball_0.update();
     this.paddle_0.update();
   };
   Game.prototype.draw_0 = function () {
     this.paddle_0.draw();
+    this.ball_0.draw();
   };
   Game.prototype.onKeyDown_0 = function (event) {
     var tmp$;
@@ -127,6 +159,7 @@ var PingPong = function (_, Kotlin) {
     var game = new Game(context);
     game.start();
   }
+  _.Ball = Ball;
   _.Game = Game;
   _.Paddle = Paddle;
   Object.defineProperty(_, 'GAME_WIDTH', {
