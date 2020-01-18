@@ -4,8 +4,17 @@ import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.window
 
 class Game(private val context: CanvasRenderingContext2D) {
+    companion object {
+        const val INTRO = "intro"
+        const val PLAYING = "playing"
+        const val PAUSED = "paused"
+        const val FINISHED = "finished"
+    }
+
+    var state = INTRO
     private val paddle: Paddle = Paddle(context)
     private val ball: Ball = Ball(context)
+    private val collisionController: CollisionController = CollisionController(ball, paddle)
     private var timer: Int = 0
 
     init {
@@ -16,6 +25,7 @@ class Game(private val context: CanvasRenderingContext2D) {
     fun start() {
         if (timer == 0) {
             stop()
+            state = PLAYING
             timer = window.setInterval({ loop() }, 5)
             //loop()
         }
@@ -39,11 +49,12 @@ class Game(private val context: CanvasRenderingContext2D) {
     private fun update() {
         ball.update()
         paddle.update()
+        collisionController.update()
     }
 
     private fun draw() {
-        paddle.draw()
         ball.draw()
+        paddle.draw()
     }
 
     private fun onKeyDown(event: Event) {
