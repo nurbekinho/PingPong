@@ -9,6 +9,7 @@ var PingPong = function (_, Kotlin) {
   var Kind_OBJECT = Kotlin.Kind.OBJECT;
   var Unit = Kotlin.kotlin.Unit;
   var throwCCE = Kotlin.throwCCE;
+  var equals = Kotlin.equals;
   function Ball(context) {
     this.context_0 = context;
     this.radius = 10.0;
@@ -23,7 +24,10 @@ var PingPong = function (_, Kotlin) {
     if (this.x + this.radius > GAME_WIDTH || this.x - this.radius < 0) {
       this.xSpeed = this.xSpeed * -1 | 0;
     }
-    if (this.y + this.radius > GAME_HEIGHT || this.y - this.radius < 0) {
+    if (this.y - this.radius <= 0) {
+      this.ySpeed = this.ySpeed * -1 | 0;
+    }
+     else if (this.y + this.radius >= GAME_HEIGHT) {
       this.ySpeed = this.ySpeed * -1 | 0;
     }
   };
@@ -82,13 +86,18 @@ var PingPong = function (_, Kotlin) {
   function Game(context) {
     Game$Companion_getInstance();
     this.context_0 = context;
-    this.state = Game$Companion_getInstance().INTRO;
+    this.state = '';
     this.paddle_0 = new Paddle(this.context_0);
     this.ball_0 = new Ball(this.context_0);
     this.collisionController_0 = new CollisionController(this.ball_0, this.paddle_0);
     this.timer_0 = 0;
+    this.state = Game$Companion_getInstance().INTRO;
     window.addEventListener('keydown', Game_init$lambda(this));
     window.addEventListener('keyup', Game_init$lambda_0(this));
+    this.context_0.font = '30px Arial';
+    this.context_0.fillStyle = 'black';
+    this.context_0.textAlign = 'center';
+    this.context_0.fillText('Press [Space Bar] To Start The Game', GAME_WIDTH / 2, GAME_HEIGHT / 2);
   }
   function Game$Companion() {
     Game$Companion_instance = this;
@@ -117,8 +126,8 @@ var PingPong = function (_, Kotlin) {
   }
   Game.prototype.start = function () {
     if (this.timer_0 === 0) {
-      this.stop_0();
       this.state = Game$Companion_getInstance().PLAYING;
+      this.stop_0();
       this.timer_0 = window.setInterval(Game$start$lambda(this), 5);
     }
   };
@@ -166,6 +175,10 @@ var PingPong = function (_, Kotlin) {
         if (this.paddle_0.speed > 0)
           this.paddle_0.stop();
         break;
+      case 32:
+        if (equals(this.state, Game$Companion_getInstance().INTRO))
+          this.start();
+        break;
     }
   };
   function Game_init$lambda(this$Game) {
@@ -188,9 +201,9 @@ var PingPong = function (_, Kotlin) {
   function Paddle(context) {
     this.context_0 = context;
     this.width = 100.0;
-    this.height = 20.0;
+    this.height_0 = 20.0;
     this.x = (GAME_WIDTH - this.width) / 2;
-    this.y = GAME_HEIGHT - this.height - 10;
+    this.y = GAME_HEIGHT - this.height_0 - 10;
     this.maxSpeed_0 = 5.0;
     this.speed = 0.0;
   }
@@ -202,7 +215,7 @@ var PingPong = function (_, Kotlin) {
       this.x = GAME_WIDTH - this.width;
   };
   Paddle.prototype.draw = function () {
-    this.context_0.fillRect(this.x, this.y, this.width, this.height);
+    this.context_0.fillRect(this.x, this.y, this.width, this.height_0);
   };
   Paddle.prototype.moveLeft = function () {
     this.speed = -this.maxSpeed_0;
@@ -225,7 +238,6 @@ var PingPong = function (_, Kotlin) {
     var canvas = Kotlin.isType(tmp$ = document.getElementById('canvas'), HTMLCanvasElement) ? tmp$ : throwCCE();
     var context = Kotlin.isType(tmp$_0 = canvas.getContext('2d'), CanvasRenderingContext2D) ? tmp$_0 : throwCCE();
     var game = new Game(context);
-    game.start();
   }
   _.Ball = Ball;
   _.CollisionController = CollisionController;

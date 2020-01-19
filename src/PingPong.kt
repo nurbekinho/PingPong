@@ -9,7 +9,7 @@ fun main() {
     val canvas = document.getElementById("canvas") as HTMLCanvasElement
     val context = canvas.getContext("2d") as CanvasRenderingContext2D
     val game = Game(context)
-    game.start()
+    //game.start()
 }
 
 

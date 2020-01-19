@@ -1,4 +1,6 @@
+import org.w3c.dom.CENTER
 import org.w3c.dom.CanvasRenderingContext2D
+import org.w3c.dom.CanvasTextAlign
 import org.w3c.dom.events.Event
 import org.w3c.dom.events.KeyboardEvent
 import kotlin.browser.window
@@ -11,7 +13,7 @@ class Game(private val context: CanvasRenderingContext2D) {
         const val FINISHED = "finished"
     }
 
-    var state = INTRO
+    var state = ""
     private val paddle: Paddle = Paddle(context)
     private val ball: Ball = Ball(context)
     private val collisionController: CollisionController = CollisionController(ball, paddle)
@@ -20,9 +22,24 @@ class Game(private val context: CanvasRenderingContext2D) {
     init {
         window.addEventListener("keydown", {onKeyDown(it)})
         window.addEventListener("keyup", {onKeyUp(it)})
+
+        intro()
     }
 
-    fun start() {
+    private fun intro() {
+        state = INTRO
+
+        context.font = "30px Arial"
+        context.fillStyle = "black"
+        context.textAlign = CanvasTextAlign.CENTER
+        context.fillText(
+                "Press [Space Bar] To Start The Game",
+                GAME_WIDTH / 2,
+                GAME_HEIGHT / 2
+        )
+    }
+
+    private fun start() {
         if (timer == 0) {
             stop()
             state = PLAYING
@@ -73,6 +90,9 @@ class Game(private val context: CanvasRenderingContext2D) {
             }
             39 -> {
                 if (paddle.speed > 0) paddle.stop()
+            }
+            32 -> {
+                if (state == INTRO) start()
             }
         }
     }
