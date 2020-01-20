@@ -2,7 +2,7 @@ import org.w3c.dom.CanvasRenderingContext2D
 
 class Paddle(private val context: CanvasRenderingContext2D) {
     val width = 100.0
-    private val height = 20.0
+    val height = 20.0
     var x = (GAME_WIDTH - width) / 2
     var y = GAME_HEIGHT - height - 10
     private var maxSpeed = 5.0

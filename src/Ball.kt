@@ -5,8 +5,8 @@ class Ball(private val context: CanvasRenderingContext2D) {
     val radius = 10.0
     var x = (GAME_WIDTH - radius) / 2
     var y = (GAME_HEIGHT - radius) / 2
-    var xSpeed = 1
-    var ySpeed = 1
+    var xSpeed = 2
+    var ySpeed = 2
 
     fun update() {
         x += xSpeed

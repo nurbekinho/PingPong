@@ -15,13 +15,16 @@ class Game(private val context: CanvasRenderingContext2D) {
 
     var state = ""
     private val paddle: Paddle = Paddle(context)
+    private var aiPaddle = Paddle(context)
     private val ball: Ball = Ball(context)
-    private val collisionController: CollisionController = CollisionController(ball, paddle)
+    private val collisionController: CollisionController = CollisionController(ball, aiPaddle, paddle)
+    private val aiController: AIController = AIController(ball, aiPaddle)
     private var timer: Int = 0
 
     init {
         window.addEventListener("keydown", {onKeyDown(it)})
         window.addEventListener("keyup", {onKeyUp(it)})
+        aiPaddle.y = 10.0
 
         intro()
     }
@@ -66,11 +69,14 @@ class Game(private val context: CanvasRenderingContext2D) {
     private fun update() {
         ball.update()
         paddle.update()
+        aiPaddle.update()
+        aiController.update()
         collisionController.update()
     }
 
     private fun draw() {
         ball.draw()
+        aiPaddle.draw()
         paddle.draw()
     }
 
