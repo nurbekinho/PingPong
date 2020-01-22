@@ -17,10 +17,10 @@ class Ball(private val context: CanvasRenderingContext2D) {
         }
 
         if (y - radius <= 0) {
-            //println("user won")
+            println("user won")
             ySpeed *= -1
         } else if (y + radius >= GAME_HEIGHT) {
-            //println("computer won")
+            println("computer won")
             ySpeed *= -1
         }
     }
